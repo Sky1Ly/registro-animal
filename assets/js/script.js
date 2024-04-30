@@ -83,7 +83,7 @@ class Aguila extends Animal {
 //Función IIFE para cambiar imagen segun el select
 let imagenAnimal = (() => {
     //Selecciona recuadro de imagen
-    let imagen = document.querySelector("#preview")
+    let imagen = document.querySelector("#previeww")
 
     return {
         agregaImagen(selected) {
@@ -96,11 +96,23 @@ let imagenAnimal = (() => {
     }
 })()
 
+//Card que muestra la imagen del animal
+function cardAnimals(animal) {    
+    return `
+    <div class="card text-bg-dark m-3" style="max-width: 160px; z-index: 100">
+        <img src="./assets/imgs/${animal}.png" class="card-img" alt="...">
+        <div class="card-footer bg-secondary border-success" id="audioAnimal">
+            <img src="./assets/imgs/audio.svg" style="max-width: 30px;">
+        </div>
+    </div>`
+}
+
 //Selecion de objetos del formulario
 let btnAgregar = document.querySelector("#btnRegistrar")
 let selected = document.querySelector("#animal")
 let edad = document.querySelector("#edad")
 let comentarios = document.querySelector("#comentarios")
+let animalesSelected = document.querySelector("#Animales")
 
 //Llamado función IIFE
 imagenAnimal.agregaImagen(selected)
@@ -120,7 +132,17 @@ btnAgregar.addEventListener("click", function () {
 
     //si isValid continua falso, es porque no pasó algun parametro
     if (isValid) {
-        alert("Datos Correctos")
+        //Se agrega la card con el sonido del animal
+        let animalSelected = selected.value
+        let dataCard = cardAnimals(animalSelected)
+        
+        //Se crea un elemento para la tarjeta y se agrega
+        let cardContainer = document.createElement("div")
+        cardContainer.innerHTML = dataCard
+
+        //Una vez creado el objeto, se agrega al div padre
+        animalesSelected.appendChild(cardContainer)
+
     } else {
         alert("Debe de completar los datos para poder agregar al animal")
     }
