@@ -81,17 +81,47 @@ class Aguila extends Animal {
 }
 
 //Función IIFE para cambiar imagen segun el select
-(() => {
+let imagenAnimal = (() => {
     //Selecciona recuadro de imagen
     let imagen = document.querySelector("#preview")
 
-    //Selecciona el select del formulario
-    let selected = document.querySelector("#animal")
-
-    //Evento para detectar cambios en la selección
-    selected.addEventListener("change", function () {
-        let selectedOption = this.options[this.selectedIndex]
-        imagen.innerHTML = `<img src="./assets/imgs/${selectedOption.value}.png" style="object-fit: cover; width: 100%">`
-    })
+    return {
+        agregaImagen(selected) {
+            //Evento para detectar cambios en la selección
+            selected.addEventListener("change", function () {
+                let selectedOption = this.options[this.selectedIndex]
+                imagen.innerHTML = `<img src="./assets/imgs/${selectedOption.value}.png" style="object-fit: cover; width: 100%">`
+            })
+        }
+    }
 })()
 
+//Selecion de objetos del formulario
+let btnAgregar = document.querySelector("#btnRegistrar")
+let selected = document.querySelector("#animal")
+let edad = document.querySelector("#edad")
+let comentarios = document.querySelector("#comentarios")
+
+//Llamado función IIFE
+imagenAnimal.agregaImagen(selected)
+
+//Validación de registro
+btnAgregar.addEventListener("click", function () {
+    let isValid = false
+
+    //Valida cada parámetro que contenga los datos
+    if (selected.selectedIndex != 0) {
+        if (edad.selectedIndex != 0) {
+            if (comentarios.value != "") {
+                isValid = true
+            }
+        }
+    }
+
+    //si isValid continua falso, es porque no pasó algun parametro
+    if (isValid) {
+        alert("Datos Correctos")
+    } else {
+        alert("Debe de completar los datos para poder agregar al animal")
+    }
+})
