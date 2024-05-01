@@ -5,7 +5,7 @@ let edad = document.querySelector("#edad")
 let comentarios = document.querySelector("#comentarios")
 let animalesSelected = document.querySelector("#Animales")
 let audio = document.querySelector("#audioAnimal")
-
+let modalHTML = document.querySelector("#modal")
 
 //Clase Padre
 class Animal {
@@ -105,11 +105,46 @@ let imagenAnimal = (() => {
     }
 })()
 
+//Modal
+function modalAnimal(animal, edad, comentario) {
+    let modal =  `
+    <div class="modal fade" id="staticBackdrop${animal}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="card mb-3" style="max-width: 540px;">
+                    <div class="row g-0">
+                        <div class="col-md-4">
+                        <img src="./assets/imgs/${animal}.png" class="img-fluid rounded-start">
+                        </div>
+                        <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title">${animal}</h5>
+                            <p class="card-text"><b>${comentario}</b></p>
+                            <p class="card-text"><small class="text-body-secondary">Edad: ${edad}</small></p>
+                        </div>
+                        </div>
+                    </div>
+                </div> 
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    `
+    let modalContainer = document.createElement("div")
+    modalContainer.innerHTML = modal
+
+    modalHTML.appendChild(modalContainer)
+}
+
 //Card que muestra la imagen del animal
 function cardAnimals(animal, sound) {
     return `
     <div class="card text-bg-dark m-3" style="max-width: 160px; z-index: 100">
-        <img src="./assets/imgs/${animal}.png" class="card-img" alt="...">
+        <img src="./assets/imgs/${animal}.png" class="card-img" data-bs-toggle="modal" data-bs-target="#staticBackdrop${animal}">
         <div class="card-footer bg-secondary border-success" id="audioAnimal">
             <img src="./assets/imgs/audio.svg" style="max-width: 30px;">
             <audio id="audio${animal}" src="./assets/sounds/${sound}"></audio>
@@ -171,6 +206,7 @@ btnAgregar.addEventListener("click", function () {
         }
 
         let dataCard = cardAnimals(animalSelected, soundAnimal)
+        modalAnimal(animalSelected, edadAnimal, comentAnimal)
 
         //Se crea un elemento para la tarjeta y se agrega
         let cardContainer = document.createElement("div")
