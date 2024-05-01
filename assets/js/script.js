@@ -1,3 +1,12 @@
+//Selecion de objetos del formulario
+let btnAgregar = document.querySelector("#btnRegistrar")
+let selected = document.querySelector("#animal")
+let edad = document.querySelector("#edad")
+let comentarios = document.querySelector("#comentarios")
+let animalesSelected = document.querySelector("#Animales")
+let audio = document.querySelector("#audioAnimal")
+
+
 //Clase Padre
 class Animal {
     constructor(nombre, edad, imag, comentarios, sonido) {
@@ -36,7 +45,7 @@ class Leon extends Animal {
     }
 
     Rugir() {
-
+        return this.sonido
     }
 }
 
@@ -46,7 +55,7 @@ class Lobo extends Animal {
     }
 
     Aullar() {
-
+        return this.sonido
     }
 }
 
@@ -56,7 +65,7 @@ class Oso extends Animal {
     }
 
     Grunir() {
-
+        return this.sonido
     }
 }
 
@@ -65,8 +74,8 @@ class Serpiente extends Animal {
         super(nombre, edad, imag, comentarios, sonido)
     }
 
-    sisear() {
-
+    Sisear() {
+        return this.sonido
     }
 }
 
@@ -76,7 +85,7 @@ class Aguila extends Animal {
     }
 
     Chillar() {
-
+        return this.sonido
     }
 }
 
@@ -97,22 +106,16 @@ let imagenAnimal = (() => {
 })()
 
 //Card que muestra la imagen del animal
-function cardAnimals(animal) {    
+function cardAnimals(animal, sound) {
     return `
     <div class="card text-bg-dark m-3" style="max-width: 160px; z-index: 100">
         <img src="./assets/imgs/${animal}.png" class="card-img" alt="...">
         <div class="card-footer bg-secondary border-success" id="audioAnimal">
             <img src="./assets/imgs/audio.svg" style="max-width: 30px;">
+            <audio id="audio${animal}" src="./assets/sounds/${sound}"></audio>
         </div>
     </div>`
 }
-
-//Selecion de objetos del formulario
-let btnAgregar = document.querySelector("#btnRegistrar")
-let selected = document.querySelector("#animal")
-let edad = document.querySelector("#edad")
-let comentarios = document.querySelector("#comentarios")
-let animalesSelected = document.querySelector("#Animales")
 
 //Llamado función IIFE
 imagenAnimal.agregaImagen(selected)
@@ -132,10 +135,43 @@ btnAgregar.addEventListener("click", function () {
 
     //si isValid continua falso, es porque no pasó algun parametro
     if (isValid) {
-        //Se agrega la card con el sonido del animal
         let animalSelected = selected.value
-        let dataCard = cardAnimals(animalSelected)
-        
+        let edadAnimal = edad.value
+        let comentAnimal = comentarios.value
+        let soundAnimal
+
+        switch (animalSelected) {
+            case "Leon":
+                let leon = new Leon(animalSelected, edadAnimal, "imagen", comentAnimal, "Rugido.mp3")
+                soundAnimal = leon.Rugir()
+                break;
+
+            case "Lobo":
+                let lobo = new Lobo(animalSelected, edadAnimal, "imagen", comentAnimal, "Aullido.mp3")
+                soundAnimal = lobo.Aullar()
+                break
+
+            case "Oso":
+                let oso = new Oso(animalSelected, edadAnimal, "imagen", comentAnimal, "Grunido.mp3")
+                soundAnimal = oso.Grunir()
+                break
+
+            case "Serpiente":
+                let serpiente = new Serpiente(animalSelected, edadAnimal, "imagen", comentAnimal, "Siseo.mp3")
+                soundAnimal = serpiente.Sisear()
+                break
+
+            case "Aguila":
+                let aguila = new Aguila(animalSelected, edadAnimal, "imagen", comentAnimal, "Chillido.mp3")
+                soundAnimal = aguila.Chillar()
+                break
+
+            default:
+                break;
+        }
+
+        let dataCard = cardAnimals(animalSelected, soundAnimal)
+
         //Se crea un elemento para la tarjeta y se agrega
         let cardContainer = document.createElement("div")
         cardContainer.innerHTML = dataCard
@@ -147,3 +183,16 @@ btnAgregar.addEventListener("click", function () {
         alert("Debe de completar los datos para poder agregar al animal")
     }
 })
+
+// Event listener para reproducir el sonido al hacer clic en el div "audioAnimal"
+document.addEventListener("click", function (event) {
+    // Verifica si el clic ocurrió en un elemento con el ID "audioAnimal"
+    if (event.target.id === "audioAnimal") {
+        // Obtiene el audio correspondiente al animal
+        let audioElement = event.target.querySelector("audio");
+        if (audioElement) {
+            // Reproduce el sonido
+            audioElement.play();
+        }
+    }
+});
